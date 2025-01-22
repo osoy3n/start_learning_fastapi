@@ -1,6 +1,13 @@
 from pydantic import EmailStr
 from sqlmodel import SQLModel, Field, Relationship
+from typing import TYPE_CHECKING
 from uuid import UUID
+
+from models.plan_models import CustomerPlan
+
+if TYPE_CHECKING:
+    from models.transaction_models import Transactions
+    from models.plan_models import Plans
 
 class Customer(SQLModel):
     age: int = Field(default=None)
@@ -11,3 +18,4 @@ class Customer(SQLModel):
 class Customers(Customer, table=True):
     id: UUID = Field(primary_key=True)
     transactions: list["Transactions"] = Relationship(back_populates="customer")
+    plans: list["Plans"] = Relationship(back_populates="customers", link_model=CustomerPlan)
